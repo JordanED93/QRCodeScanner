@@ -28,27 +28,30 @@
   <script>
     function onScanSuccess(decodedText, decodedResult) {
       document.getElementById('status').innerText = `Scanned: ${decodedText}`;
-      
       setTimeout(() => {
         window.location.href = decodedText;
       }, 1500);
     }
 
     function onScanFailure(error) {
-      // You can log errors here if needed
+      // Can log or ignore failures
     }
 
     const html5QrCode = new Html5Qrcode("reader");
 
     Html5Qrcode.getCameras().then(devices => {
-      // Look for a rear-facing camera
-      const rearCamera = devices.find(device =>
-        device.label.toLowerCase().includes('back') ||
-        device.label.toLowerCase().includes('rear') ||
-        device.label.toLowerCase().includes('environment')
-      );
+      console.log("Available cameras:", devices);
 
-      const selectedDeviceId = rearCamera ? rearCamera.id : devices[0].id;
+      let selectedDeviceId;
+
+      if (devices.length > 1) {
+        // Try second camera (commonly rear-facing on tablets)
+        selectedDeviceId = devices[1].id;
+      } else {
+        selectedDeviceId = devices[0].id;
+      }
+
+      document.getElementById("status").innerText = `Using camera: ${devices.find(d => d.id === selectedDeviceId)?.label || 'Unknown'}`;
 
       html5QrCode.start(
         selectedDeviceId,
@@ -65,4 +68,5 @@
   </script>
 </body>
 </html>
+
 
