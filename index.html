@@ -3,33 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QR Code Scanner</title>
+  <title>Hollybank QR Code Scanner</title>
   <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     body {
       font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      justify-content: flex-start;
+      min-height: 100vh;
     }
+
+    header {
+      width: 100%;
+      background-color: #004080;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
     #reader {
       width: 300px;
       margin: 1rem auto;
     }
+
     select {
       margin-top: 10px;
       padding: 5px;
     }
+
+    .footer-image {
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+
+    .footer-image img {
+      max-width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
+  <header>
+    Hollybank Trust QR Code Scanner
+  </header>
+
   <h2>Scan QR Code</h2>
   <div id="reader"></div>
   <p id="status">Waiting for QR code...</p>
   <label for="camera-select">Choose Camera:</label>
   <select id="camera-select"></select>
+
+  <!-- Footer image section -->
+  <div class="footer-image">
+    <img src="Screenshot_1.png" alt="Hollybank Trust Image">
+  </div>
 
   <script>
     let html5QrCode = new Html5Qrcode("reader");
@@ -97,3 +136,4 @@
   </script>
 </body>
 </html>
+
