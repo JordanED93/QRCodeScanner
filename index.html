@@ -18,14 +18,49 @@
       width: 300px;
       margin: 1rem auto;
     }
+    select {
+      margin-top: 10px;
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
   <h2>Scan QR Code</h2>
   <div id="reader"></div>
   <p id="status">Waiting for QR code...</p>
+  <label for="camera-select">Choose Camera:</label>
+  <select id="camera-select"></select>
 
   <script>
+    let html5QrCode = new Html5Qrcode("reader");
+    let currentCameraId = null;
+
+    function startScanner(cameraId) {
+      if (html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => {
+          html5QrCode.clear();
+          runScanner(cameraId);
+        }).catch(err => {
+          console.error("Stop failed", err);
+        });
+      } else {
+        runScanner(cameraId);
+      }
+    }
+
+    function runScanner(cameraId) {
+      document.getElementById("status").innerText = `Using camera: ${cameraId}`;
+      html5QrCode.start(
+        cameraId,
+        {
+          fps: 10,
+          qrbox: 250
+        },
+        onScanSuccess,
+        onScanFailure
+      );
+    }
+
     function onScanSuccess(decodedText, decodedResult) {
       document.getElementById('status').innerText = `Scanned: ${decodedText}`;
       setTimeout(() => {
@@ -34,39 +69,33 @@
     }
 
     function onScanFailure(error) {
-      // Can log or ignore failures
+      // Optional: log errors
     }
 
-    const html5QrCode = new Html5Qrcode("reader");
-
     Html5Qrcode.getCameras().then(devices => {
-      console.log("Available cameras:", devices);
+      const select = document.getElementById("camera-select");
 
-      let selectedDeviceId;
+      devices.forEach(device => {
+        const option = document.createElement("option");
+        option.value = device.id;
+        option.text = device.label || `Camera ${select.length + 1}`;
+        select.appendChild(option);
+      });
 
-      if (devices.length > 1) {
-        // Try second camera (commonly rear-facing on tablets)
-        selectedDeviceId = devices[1].id;
-      } else {
-        selectedDeviceId = devices[0].id;
+      if (devices.length > 0) {
+        currentCameraId = devices[0].id;
+        startScanner(currentCameraId);
       }
 
-      document.getElementById("status").innerText = `Using camera: ${devices.find(d => d.id === selectedDeviceId)?.label || 'Unknown'}`;
-
-      html5QrCode.start(
-        selectedDeviceId,
-        {
-          fps: 10,
-          qrbox: 250
-        },
-        onScanSuccess,
-        onScanFailure
-      );
+      select.addEventListener("change", () => {
+        const selectedId = select.value;
+        currentCameraId = selectedId;
+        startScanner(selectedId);
+      });
     }).catch(err => {
       document.getElementById('status').innerText = "Camera error: " + err;
     });
   </script>
 </body>
 </html>
-
 
