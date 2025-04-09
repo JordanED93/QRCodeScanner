@@ -20,13 +20,21 @@
 
     header {
       width: 100%;
-      background-color: #317d81; /* Hollybank teal */
+      background-color: #317d81;
       color: white;
-      padding: 20px 0;
+      padding: 15px 0;
       text-align: center;
       font-size: 1.5rem;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header img {
+      height: 40px;
     }
 
     h2 {
@@ -59,6 +67,7 @@
 </head>
 <body>
   <header>
+    <img src="qr-logo.png" alt="QR Logo">
     Hollybank Trust QR Code Scanner
   </header>
 
@@ -68,7 +77,6 @@
   <label for="camera-select">Choose Camera:</label>
   <select id="camera-select"></select>
 
-  <!-- Resized Footer image -->
   <div class="footer-image">
     <img src="Screenshot_1.png" alt="Hollybank Trust Image">
   </div>
@@ -139,6 +147,7 @@
   </script>
 </body>
 </html>
+
 
 
 
